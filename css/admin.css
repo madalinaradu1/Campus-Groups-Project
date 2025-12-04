@@ -1,0 +1,291 @@
+body {
+  background-color: #f6f7fb;   /* soft gray */
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+* {
+  font-family: Arial, Helvetica, sans-serif !important;
+}
+
+/* Scope everything to the admin body class so we don't fight global CT.css */
+/*.cg-admin {
+  background-color: #fafaff;  /* very soft lavender */
+  /*max-width: 1180px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem 2rem;
+  font-size: 0.95rem;
+  }*/
+  
+  .cg-admin {
+    background-color: #f6f7fb;
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 1180px;
+    margin: 2rem auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+ 
+
+/* Headings */
+.cg-admin h1 {
+  font-size: 1.6rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.cg-admin h2 {
+  font-size: 1.25rem;
+  margin: 0.75rem 0 0.5rem;
+}
+
+.cg-admin h3 {
+  font-size: 1.0rem;
+  margin: 0.75rem 0 0.4rem;
+}
+
+/* Messages */
+.cg-admin .messages {
+  margin: 0.5rem 0 1rem;
+}
+
+.cg-admin .messages .error {
+  border: 1px solid #e19b9b;
+  background: #fdeeee;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+}
+
+.cg-admin .messages .success {
+  border: 1px solid #9ac59e;
+  background: #eefaf0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+}
+
+/* TAB STRIP */
+.cg-admin .tabs {
+  margin: 1rem 0 0;
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 1px solid #d9dde4;
+  text-align: left;
+  display: flex;
+  align-items: center;
+}
+
+/* Tab wrapper */
+.cg-admin .tab {
+  padding: 0;
+  border-radius: 6px 6px 0 0;
+  background: #cfd1d4;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: #3f4b5b;
+  border: 1px solid transparent;
+  border-bottom: none;
+}
+
+/* If you used <a href="..."> inside a tab, style that too */
+.cg-admin .tab a {
+  display: block;
+  padding: 0.40rem 0.90rem;
+  text-decoration: none;
+  color: inherit;
+  
+}
+
+/* Plain text tabs (no <a>) */
+.cg-admin .tab {
+  padding: 0.40rem 0.90rem;
+  cursor: pointer;
+  
+}
+
+/* Active tab */
+.cg-admin .tab.active {
+  background: #3b447d;
+  border-color: #d9dde4;
+  border-bottom-color: #ffffff;
+  color: #FFFFFF;
+}
+
+/* TAB CONTENT */
+.cg-admin .tab-content {
+  display: none;
+  padding: 1rem 0 0.25rem;
+}
+
+
+
+
+/* Only show the active pane */
+.cg-admin .tab-content.active {
+  display: block;
+}
+
+/* Forms – light touch only */
+.cg-admin form label {
+  display: block;
+  margin-bottom: 0.75rem;
+  width: 300px;
+}
+
+.cg-admin form label:not(.inline-label) {
+  display: flex;
+  flex-direction: column;
+}
+
+.cg-admin form input[type="text"],
+.cg-admin form input[type="email"],
+.cg-admin form input[type="password"],
+.cg-admin form input[type="number"],
+.cg-admin form input[type="date"],
+.cg-admin form input[type="file"],
+.cg-admin form select {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #c2c7d0;
+  font-size: 0.9rem;
+  width: 300px;
+  box-sizing: border-box;
+  display: block;
+  margin-top: 0.25rem;
+}
+
+/* Buttons */
+.cg-admin button,
+.cg-admin input[type="submit"] {
+  padding: 0.35rem 0.9rem;
+  border-radius: 4px;
+  border: 1px solid #7a8bb4;
+  background: #8d9cd3;
+  color: #ffffff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.cg-admin button:hover,
+.cg-admin input[type="submit"]:hover {
+  background: #7a8bb4;
+}
+
+/* Links inside tables/actions */
+.cg-admin a {
+  color: #415a9c;
+}
+
+.cg-admin a:hover {
+  text-decoration: underline;
+}
+
+/* TABLES */
+.cg-admin table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  background: #ffffff;
+}
+
+/* Header row */
+.cg-admin table thead th {
+  background: #f0f2f7;
+  border-bottom: 2px solid #c3cad8;
+  padding: 0.45rem 0.6rem;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* Body cells */
+.cg-admin table tbody td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid #d9dde4;
+  vertical-align: top;
+}
+
+/* Column dividers */
+.cg-admin table th,
+.cg-admin table td {
+  border-right: 1px solid #e0e3eb;
+}
+
+.cg-admin table th:last-child,
+.cg-admin table td:last-child {
+  border-right: none;
+}
+
+/* Alternating row striping */
+.cg-admin table tbody tr:nth-child(even) {
+  background: #f8f9fc;
+}
+
+/* Small inline forms in Actions column */
+.cg-admin .inline-form {
+  display: inline-block;
+  margin: 0;
+}
+
+.cg-admin .inline-form button {
+  margin-left: 0.2rem;
+  margin-top: 0.2rem;
+}
+
+/* Log viewer */
+.cg-admin .log-search {
+  margin-bottom: 0.5rem;
+}
+
+.cg-admin .log-lines {
+  max-height: 320px;
+  overflow-y: auto;
+  border: 1px solid #d9dde4;
+  border-radius: 4px;
+  padding: 0.5rem 0.75rem;
+  background: #ffffff;
+}
+
+.cg-admin .log-line {
+  font-family: monospace;
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  border-bottom: 1px solid #eef1f7;
+  padding: 0.1rem 0;
+}
+
+.cg-admin .log-line:last-child {
+  border-bottom: none;
+}
+
+/* Compact filters row */
+.cg-admin #content-manage_users form[method="post"] {
+  font-size: 0.9rem;
+}
+
+/* Change-password panel tweaks */
+.cg-admin #changePasswordPanel label input[type="password"] {
+  max-width: 200px;
+}
+
+
+
+
+/* Compact horizontal action buttons */
+.action-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 6px; /* small space between buttons */
+}
+
+.action-buttons button {
+    background-color: #7687B5;
+    color: white;
+    border: none;
+    padding: 4px 8px;   /* smaller height */
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8rem;  /* smaller text */
+    white-space: nowrap;
+}
+
+.action-buttons button:hover {
+    background-color: #5c6c94;
+}

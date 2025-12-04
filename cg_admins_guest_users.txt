@@ -1,0 +1,94 @@
+Here’s SQL you can run in MySQL to create both tables so they line up with the PHP code you have now.
+
+You can run this in phpMyAdmin, MySQL Workbench, or the MySQL CLI after selecting your database (e.g., USE cg_guest;).
+
+
+CREATE TABLE `cg_guest_users` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  
+  -- 9-digit guest ID starting at 900000001, mapped to CampusGroups NetID2
+  `netid2` INT UNSIGNED NOT NULL,
+  
+  `first_name`    VARCHAR(100) NOT NULL,
+  `last_name`     VARCHAR(100) NOT NULL,
+  `email`         VARCHAR(190) NOT NULL,
+  `association`   VARCHAR(190) NOT NULL,   -- Association with GCU (parent, contractor, etc.)
+  `sponsor`       VARCHAR(190) NOT NULL,   -- GCU community sponsor (name/email)
+  
+  `deprov_days`   INT UNSIGNED NOT NULL,   -- Number of days until expiration from creation/update
+  `expires_at`    DATETIME NOT NULL,       -- Scheduled expiration date/time
+  
+  -- Lifecycle status for this guest account
+  `status`        ENUM('pending','active','deprovisioned','failed') NOT NULL DEFAULT 'pending',
+  
+  -- CampusGroups user ID (if/when known from API response)
+  `cg_user_id`    VARCHAR(64) DEFAULT NULL,
+  
+  -- Sync / error tracking
+  `last_synced_at` DATETIME DEFAULT NULL,
+  `last_error`     TEXT DEFAULT NULL,
+  
+  -- Notification tracking (7-day expiry email)
+  `notify_sent`     TINYINT(1) NOT NULL DEFAULT 0,
+  `notify_sent_at`  DATETIME DEFAULT NULL,
+  
+  -- Timestamps
+  `created_at`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at`   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_netid2` (`netid2`),
+  KEY `idx_email` (`email`),
+  KEY `idx_status` (`status`),
+  KEY `idx_expires_at` (`expires_at`),
+  KEY `idx_notify` (`status`, `notify_sent`, `expires_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+Notes:
+
+netid2 is unique and used by the app everywhere as the guest ID.
+
+status matches exactly the values used in the PHP (pending, active, deprovisioned, failed).
+
+notify_sent and notify_sent_at are used by notify_expiring.php.
+
+Indexes help the nightly jobs (status, expires_at, notify_sent) run fast.
+
+
+
+
+
+CREATE TABLE `cg_admins` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  
+  `username`      VARCHAR(100) NOT NULL,
+  `password_hash` VARCHAR(255) NOT NULL,
+  `full_name`     VARCHAR(150) NOT NULL,
+  `email`         VARCHAR(190) NOT NULL,
+  
+  `is_active`     TINYINT(1) NOT NULL DEFAULT 1,
+  
+  `created_at`    TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_login_at` DATETIME DEFAULT NULL,
+  
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uniq_username` (`username`),
+  UNIQUE KEY `uniq_email` (`email`),
+  KEY `idx_is_active` (`is_active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+
+Notes:
+
+password_hash stores the output of password_hash() from PHP.
+
+Code checks:
+
+is_active when logging in.
+
+last_login_at is updated on successful login.
+
+There must always be at least one active admin (the code enforces this).
