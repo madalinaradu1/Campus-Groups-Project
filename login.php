@@ -49,39 +49,51 @@ $bodyClasses = 'cg-admin login-page';
 
 require_once __DIR__ . '/header.php';
 ?>
-  <div class="login-shell">
-    <div class="login-header">
-      <div class="login-title">GCU Life Admin</div>
-      <div class="login-subtitle">CampusGroups Guest Account Console</div>
-    </div>
+  <div class="login-page">
+    <div class="login-box">
+      <div class="login-logo">
+        <b>GCU Life</b> Admin
+      </div>
+      <div class="card">
+        <div class="card-body login-card-body">
+          <p class="login-box-msg">CampusGroups Guest Account Console</p>
 
-    <div class="login-card">
-      <?php if ($errors): ?>
-        <div class="login-errors">
-          <ul>
-            <?php foreach ($errors as $e): ?>
-              <li><?= htmlspecialchars($e) ?></li>
-            <?php endforeach; ?>
-          </ul>
+          <?php if ($errors): ?>
+            <div class="alert alert-danger">
+              <?php foreach ($errors as $e): ?>
+                <div><?= htmlspecialchars($e) ?></div>
+              <?php endforeach; ?>
+            </div>
+          <?php endif; ?>
+
+          <form method="post" action="login.php">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" name="username" placeholder="Username" required autofocus>
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-user"></span>
+                </div>
+              </div>
+            </div>
+            <div class="input-group mb-3">
+              <input type="password" class="form-control" name="password" placeholder="Password" required>
+              <div class="input-group-append">
+                <div class="input-group-text">
+                  <span class="fas fa-lock"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+              </div>
+            </div>
+          </form>
+
+          <p class="mt-3 mb-1 text-muted text-center">
+            <small>Internal use only. Access restricted to authorized GCU Life administrators.</small>
+          </p>
         </div>
-      <?php endif; ?>
-
-      <form method="post" action="login.php">
-        <label>
-          Username
-          <input type="text" name="username" required autofocus>
-        </label>
-
-        <label>
-          Password
-          <input type="password" name="password" required>
-        </label>
-
-        <button type="submit">Sign In</button>
-      </form>
-
-      <div class="login-footnote">
-        Internal use only. Access restricted to authorized GCU Life administrators.
       </div>
     </div>
   </div>

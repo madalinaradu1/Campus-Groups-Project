@@ -943,93 +943,154 @@ if (file_exists($logFile)) {
 
 require_once __DIR__ . '/header.php';
 ?>
-  <div style="max-width:1180px; margin:1rem auto 0.5rem auto; font-size:0.9rem; color:#3f4b5b;">
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:1rem;">
-      <div>
-        Logged in as:
-        <strong><?= htmlspecialchars($_SESSION['admin_full_name'] ?? $_SESSION['admin_username'] ?? 'Unknown') ?></strong>
-      </div>
-      <div>
-        <a href="#" onclick="toggleChangePasswordPanel(); return false;">Change Password</a>
-        &nbsp;|&nbsp;
-        <a href="logout.php">Logout</a>
+<div class="wrapper">
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <div class="container-fluid">
+      <button class="btn btn-link" data-widget="pushmenu" style="border:none; background:none;">
+        <i class="fas fa-bars"></i>
+      </button>
+      
+      <div class="ml-auto d-flex align-items-center">
+        <span class="mr-4">
+          <i class="fas fa-user text-primary"></i> Logged in as: <strong><?= htmlspecialchars($_SESSION['admin_full_name'] ?? $_SESSION['admin_username'] ?? 'Unknown') ?></strong>
+        </span>
+        <a href="#" onclick="toggleChangePasswordPanel(); return false;" class="btn btn-sm btn-outline-dark mr-2">
+          <i class="fas fa-key"></i> Change Password
+        </a>
+        <a href="logout.php" class="btn btn-sm btn-outline-dark">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
       </div>
     </div>
+  </nav>
 
-    <div id="changePasswordPanel" style="display:none; margin-top:0.5rem; padding:0.75rem 1rem; border-radius:6px; border:1px solid #d9dde4; background:#ffffff;">
-      <form method="post" action="admin.php" style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:flex-end;">
-        <input type="hidden" name="action" value="change_my_password">
-        <input type="hidden" name="active_tab" value="<?= htmlspecialchars($activeTab) ?>">
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="admin.php" class="brand-link">
+      <span class="brand-text font-weight-light">GCU Life Admin</span>
+    </a>
 
-        <label style="margin:0;">
-          Current Password:
-          <input type="password" name="current_password" required>
-        </label>
-
-        <label style="margin:0;">
-          New Password:
-          <input type="password" name="new_password" required>
-        </label>
-
-        <label style="margin:0;">
-          Confirm New Password:
-          <input type="password" name="new_password_confirm" required>
-        </label>
-
-        <button type="submit" style="margin-top:0.2rem;">Update</button>
-        <button type="button" onclick="toggleChangePasswordPanel();" style="margin-top:0.2rem;">Cancel</button>
-      </form>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
+          <li class="nav-item">
+            <a href="#" class="nav-link <?= $activeTab === 'new_user' ? 'active' : '' ?>" id="nav-new_user" onclick="setActiveTab('new_user')">
+              <i class="nav-icon fas fa-user-plus"></i>
+              <p>New User</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link <?= $activeTab === 'manage_users' ? 'active' : '' ?>" id="nav-manage_users" onclick="setActiveTab('manage_users')">
+              <i class="nav-icon fas fa-users"></i>
+              <p>Manage Users</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link <?= $activeTab === 'admins' ? 'active' : '' ?>" id="nav-admins" onclick="setActiveTab('admins')">
+              <i class="nav-icon fas fa-user-shield"></i>
+              <p>Admins</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link <?= $activeTab === 'audit' ? 'active' : '' ?>" id="nav-audit" onclick="setActiveTab('audit')">
+              <i class="nav-icon fas fa-clipboard-list"></i>
+              <p>Audit Trail</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link <?= $activeTab === 'logs' ? 'active' : '' ?>" id="nav-logs" onclick="setActiveTab('logs')">
+              <i class="nav-icon fas fa-file-alt"></i>
+              <p>Logs</p>
+            </a>
+          </li>
+        </ul>
+      </nav>
     </div>
-  </div>
+  </aside>
 
-  <h1>CampusGroups Guest Accounts Admin</h1>
+  <!-- Content Wrapper -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content" style="padding-top: 20px;">
+      <div class="container-fluid">
+        
+        <div id="changePasswordPanel" class="card" style="display:none; margin-bottom:1rem;">
+          <div class="card-header">
+            <h3 class="card-title">Change Password</h3>
+          </div>
+          <div class="card-body">
+            <form method="post" action="admin.php">
+              <input type="hidden" name="action" value="change_my_password">
+              <input type="hidden" name="active_tab" value="<?= htmlspecialchars($activeTab) ?>">
 
-  <div class="messages">
-    <?php if ($errors): ?>
-      <div class="error">
-        <button onclick="this.parentElement.style.display='none'" style="float:right;background:none;border:none;font-size:18px;cursor:pointer;">&times;</button>
-        <ul>
-          <?php foreach ($errors as $e): ?>
-            <li><?= htmlspecialchars($e) ?></li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-    <?php endif; ?>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Current Password:</label>
+                    <input type="password" class="form-control" name="current_password" required>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>New Password:</label>
+                    <input type="password" class="form-control" name="new_password" required>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label>Confirm New Password:</label>
+                    <input type="password" class="form-control" name="new_password_confirm" required>
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Update</button>
+              <button type="button" class="btn btn-secondary" onclick="toggleChangePasswordPanel();">Cancel</button>
+            </form>
+          </div>
+        </div>
 
-    <?php if ($success): ?>
-      <div class="success">
-        <button onclick="this.parentElement.style.display='none'" style="float:right;background:none;border:none;font-size:18px;cursor:pointer;">&times;</button>
-        <ul>
-          <?php foreach ($success as $s): ?>
-            <li><?= htmlspecialchars($s) ?></li>
-          <?php endforeach; ?>
-        </ul>
-      </div>
-    <?php endif; ?>
-  </div>
+        <?php if ($errors): ?>
+          <div class="alert alert-danger alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <?php foreach ($errors as $e): ?>
+              <div><?= htmlspecialchars($e) ?></div>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
 
-  <div class="tabs">
-    <div id="tab-new_user" class="tab" onclick="setActiveTab('new_user')">New User</div>
-    <div id="tab-manage_users" class="tab" onclick="setActiveTab('manage_users')">Manage Users</div>
-    <div id="tab-admins" class="tab" onclick="setActiveTab('admins')">Admins</div>
-	<div id="tab-audit" class="tab" onclick="setActiveTab('audit')">Audit Trail</div>
-    <div id="tab-logs" class="tab" onclick="setActiveTab('logs')">Logs</div>
-  </div>
+        <?php if ($success): ?>
+          <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <?php foreach ($success as $s): ?>
+              <div><?= htmlspecialchars($s) ?></div>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
 
-  <form id="tab_state_form" style="display:none;">
-    <input type="hidden" name="active_tab" id="active_tab_input" value="<?= htmlspecialchars($activeTab) ?>">
-  </form>
+        <form id="tab_state_form" style="display:none;">
+          <input type="hidden" name="active_tab" id="active_tab_input" value="<?= htmlspecialchars($activeTab) ?>">
+        </form>
 
   <script>
     function setActiveTab(tabId) {
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      // Remove active class from all nav links
+      document.querySelectorAll('.nav-sidebar .nav-link').forEach(t => t.classList.remove('active'));
+      // Hide all tab content
       document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      var tabEl = document.getElementById('tab-' + tabId);
+      
+      // Add active class to selected nav link
+      var navEl = document.getElementById('nav-' + tabId);
+      if (navEl) navEl.classList.add('active');
+      
+      // Show selected tab content
       var contentEl = document.getElementById('content-' + tabId);
-      if (tabEl && contentEl) {
-        tabEl.classList.add('active');
-        contentEl.classList.add('active');
-      }
+      if (contentEl) contentEl.classList.add('active');
+      
+      // Update hidden input
       var hidden = document.getElementById('active_tab_input');
       if (hidden) hidden.value = tabId;
     }
@@ -1162,6 +1223,37 @@ require_once __DIR__ . '/header.php';
       <button type="submit">Search</button>
     </form>
 
+    <?php if ($editUser): ?>
+      <div class="edit-form-container">
+        <h3>Edit User: NetID2 <?= htmlspecialchars($editUser['netid2']) ?></h3>
+        <p><strong>Name:</strong> <?= htmlspecialchars($editUser['first_name'] . ' ' . $editUser['last_name']) ?><br>
+           <strong>Email:</strong> <?= htmlspecialchars($editUser['email']) ?></p>
+        
+        <form method="post" action="admin.php">
+          <input type="hidden" name="active_tab" value="manage_users">
+          <input type="hidden" name="action" value="update_user">
+          <input type="hidden" name="netid2" value="<?= (int)$editUser['netid2'] ?>">
+
+          <label>
+            Association with GCU:
+            <input type="text" name="association" value="<?= htmlspecialchars($editUser['association']) ?>" required>
+          </label>
+
+          <label>
+            Sponsor:
+            <input type="text" name="sponsor" value="<?= htmlspecialchars($editUser['sponsor']) ?>" required>
+          </label>
+
+          <label>
+            De-provision time (days from now):
+            <input type="number" name="deprov_days" min="1" max="3650" value="<?= (int)$editUser['deprov_days'] ?>" required>
+          </label>
+
+          <button type="submit">Save Changes</button>
+        </form>
+      </div>
+    <?php endif; ?>
+
   <!-- Download ALL users CSV, independent of filters -->
   <form method="post" action="admin.php" style="margin-bottom: 0.5rem;">
     <input type="hidden" name="active_tab" value="manage_users">
@@ -1200,8 +1292,9 @@ require_once __DIR__ . '/header.php';
     <?php endif; ?>
 
     <?php if ($searchResults): ?>
-      <table>
-        <thead>
+      <div class="d-flex justify-content-center">
+      <table class="table table-striped table-hover">
+        <thead class="bg-primary text-white">
           <tr>
             <th>NetID2</th>
             <th>Name</th>
@@ -1266,35 +1359,7 @@ require_once __DIR__ . '/header.php';
           <?php endforeach; ?>
         </tbody>
       </table>
-    <?php endif; ?>
-
-    <?php if ($editUser): ?>
-      <h3>Edit User: NetID2 <?= htmlspecialchars($editUser['netid2']) ?></h3>
-      <form method="post" action="admin.php">
-        <input type="hidden" name="active_tab" value="manage_users">
-        <input type="hidden" name="action" value="update_user">
-        <input type="hidden" name="netid2" value="<?= (int)$editUser['netid2'] ?>">
-
-        <p><strong>Name:</strong> <?= htmlspecialchars($editUser['first_name'] . ' ' . $editUser['last_name']) ?><br>
-           <strong>Email:</strong> <?= htmlspecialchars($editUser['email']) ?></p>
-
-        <label>
-          Association with GCU:
-          <input type="text" name="association" value="<?= htmlspecialchars($editUser['association']) ?>" required>
-        </label>
-
-        <label>
-          Sponsor:
-          <input type="text" name="sponsor" value="<?= htmlspecialchars($editUser['sponsor']) ?>" required>
-        </label>
-
-        <label>
-          De-provision time (days from now):
-          <input type="number" name="deprov_days" min="1" max="3650" value="<?= (int)$editUser['deprov_days'] ?>" required>
-        </label>
-
-        <button type="submit">Save Changes</button>
-      </form>
+      </div>
     <?php endif; ?>
   </div>
 
@@ -1483,5 +1548,9 @@ require_once __DIR__ . '/header.php';
     
     setActiveTab('<?= htmlspecialchars($activeTab) ?>');
   </script>
+      </div>
+    </section>
+  </div>
+</div>
 
 <?php require_once __DIR__ . '/footer.php';

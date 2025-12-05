@@ -164,6 +164,32 @@ body {
   white-space: nowrap;
 }
 
+/* Edit form styling */
+.edit-form-container {
+  background: #fff;
+  border: 1px solid #d9dde4;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Tab content visibility */
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Center table in manage users */
+#content-manage_users table {
+  margin: 0 auto;
+  width: auto;
+  max-width: 95%;
+}
+
 /* Buttons */
 .cg-admin button,
 .cg-admin input[type="submit"] {
