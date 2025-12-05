@@ -122,16 +122,17 @@ body {
   display: block;
 }
 
-/* Forms – light touch only */
+/* Forms – horizontal layout */
 .cg-admin form label {
-  display: block;
+  display: flex;
+  align-items: center;
   margin-bottom: 0.75rem;
-  width: 300px;
+  gap: 0.5rem;
 }
 
 .cg-admin form label:not(.inline-label) {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .cg-admin form input[type="text"],
@@ -147,8 +148,20 @@ body {
   font-size: 0.9rem;
   width: 300px;
   box-sizing: border-box;
-  display: block;
-  margin-top: 0.25rem;
+}
+
+/* Horizontal search form */
+.search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.search-form label {
+  margin: 0;
+  white-space: nowrap;
 }
 
 /* Buttons */

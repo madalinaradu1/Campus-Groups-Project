@@ -1118,36 +1118,46 @@ require_once __DIR__ . '/header.php';
   <div id="content-manage_users" class="tab-content">
     <h2>Search / Edit / De-provision Users</h2>
 
-    <form method="post" action="admin.php" style="margin-bottom: 0.5rem;">
+    <form method="post" action="admin.php" class="search-form">
       <input type="hidden" name="active_tab" value="manage_users">
 
-      Search (NetID2, email, sponsor):
-      <input type="text" name="search_term" value="<?= htmlspecialchars($searchTerm) ?>">
+      <label>
+        Search:
+        <input type="text" name="search_term" value="<?= htmlspecialchars($searchTerm) ?>" style="width:200px;">
+      </label>
 
-      Status:
-      <select name="status_filter">
-        <option value="">Any</option>
-        <?php
-          $statuses = ['pending','active','deprovisioned','failed'];
-          foreach ($statuses as $st):
-        ?>
-          <option value="<?= $st ?>" <?= $statusFilter === $st ? 'selected' : '' ?>>
-            <?= ucfirst($st) ?>
-          </option>
-        <?php endforeach; ?>
-      </select>
+      <label>
+        Status:
+        <select name="status_filter" style="width:120px;">
+          <option value="">Any</option>
+          <?php
+            $statuses = ['pending','active','deprovisioned','failed'];
+            foreach ($statuses as $st):
+          ?>
+            <option value="<?= $st ?>" <?= $statusFilter === $st ? 'selected' : '' ?>>
+              <?= ucfirst($st) ?>
+            </option>
+          <?php endforeach; ?>
+        </select>
+      </label>
 
-      Date type:
-      <select name="date_filter_type">
-        <option value="created" <?= $dateFilterType === 'created' ? 'selected' : '' ?>>Created</option>
-        <option value="expires" <?= $dateFilterType === 'expires' ? 'selected' : '' ?>>Expires</option>
-      </select>
+      <label>
+        Date type:
+        <select name="date_filter_type" style="width:100px;">
+          <option value="created" <?= $dateFilterType === 'created' ? 'selected' : '' ?>>Created</option>
+          <option value="expires" <?= $dateFilterType === 'expires' ? 'selected' : '' ?>>Expires</option>
+        </select>
+      </label>
 
-      From:
-      <input type="date" name="date_from" value="<?= htmlspecialchars($dateFrom) ?>">
+      <label>
+        From:
+        <input type="date" name="date_from" value="<?= htmlspecialchars($dateFrom) ?>" style="width:150px;">
+      </label>
 
-      To:
-      <input type="date" name="date_to" value="<?= htmlspecialchars($dateTo) ?>">
+      <label>
+        To:
+        <input type="date" name="date_to" value="<?= htmlspecialchars($dateTo) ?>" style="width:150px;">
+      </label>
 
       <button type="submit">Search</button>
     </form>
