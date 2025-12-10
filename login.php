@@ -50,12 +50,12 @@ $bodyClasses = 'cg-admin login-page';
 require_once __DIR__ . '/header.php';
 ?>
   <div class="login-page">
-    <div class="login-box">
+    <div class="login-box" style="width: 600px; max-width: 90%; margin: 5% auto;">
       <div class="login-logo">
         <b>GCU Life</b> Admin
       </div>
       <div class="card">
-        <div class="card-body login-card-body">
+        <div class="card-body login-card-body" style="padding: 3rem;">
           <p class="login-box-msg">CampusGroups Guest Account Console</p>
 
           <?php if ($errors): ?>
@@ -76,13 +76,43 @@ require_once __DIR__ . '/header.php';
               </div>
             </div>
             <div class="input-group mb-3">
-              <input type="password" class="form-control" name="password" placeholder="Password" required>
+              <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
               <div class="input-group-append">
-                <div class="input-group-text">
-                  <span class="fas fa-lock"></span>
-                </div>
+                <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" style="border-left: 0;">
+                  <span id="toggleIcon" class="fas fa-eye"></span>
+                </button>
               </div>
             </div>
+            <style>
+              #toggleIcon {
+                transition: all 0.3s ease;
+                cursor: pointer;
+              }
+              #toggleIcon:hover {
+                transform: scale(1.1);
+                color: #007bff;
+              }
+            </style>
+            <script>
+              function togglePassword() {
+                const passwordField = document.getElementById('password');
+                const toggleIcon = document.getElementById('toggleIcon');
+                
+                // Add a brief animation effect
+                toggleIcon.style.transform = 'scale(0.8)';
+                
+                setTimeout(() => {
+                  if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
+                    toggleIcon.className = 'fas fa-eye-slash';
+                  } else {
+                    passwordField.type = 'password';
+                    toggleIcon.className = 'fas fa-eye';
+                  }
+                  toggleIcon.style.transform = 'scale(1)';
+                }, 150);
+              }
+            </script>
             <div class="row">
               <div class="col-12">
                 <button type="submit" class="btn btn-primary btn-block">Sign In</button>

@@ -134,7 +134,7 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
 
                 $pdo->commit();
-                $_SESSION['success_message'] = "User created with NetID2: {$nextNetid2}. It will sync to CampusGroups on next run.";
+                $_SESSION['success_message'] = "Guest user account was created successfully!";
 				log_message(
 				    "Admin created user netid2={$nextNetid2}, email={$email}",
 				    'admin:' . ($_SESSION['admin_username'] ?? 'unknown')
@@ -466,13 +466,14 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $currentPassword  = (string)($_POST['current_password'] ?? '');
         $newPassword      = (string)($_POST['new_password'] ?? '');
         $newPasswordConf  = (string)($_POST['new_password_confirm'] ?? '');
+        $forceReset       = isset($_POST['force_reset']) && $_POST['force_reset'] === '1';
 
         if ($adminId <= 0) {
             $errors[] = 'Session error: admin is not logged in.';
         }
 
-        if ($currentPassword === '' || $newPassword === '' || $newPasswordConf === '') {
-            $errors[] = 'All password fields are required.';
+        if ($newPassword === '' || $newPasswordConf === '') {
+            $errors[] = 'New password and confirmation are required.';
         } elseif ($newPassword !== $newPasswordConf) {
             $errors[] = 'New password and confirmation do not match.';
         } elseif (strlen($newPassword) < 8) {
@@ -493,8 +494,10 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 if (!$admin) {
                     $errors[] = 'Admin record not found or inactive.';
-                } elseif (!password_verify($currentPassword, $admin['password_hash'])) {
-                    $errors[] = 'Current password is incorrect.';
+                } elseif (!$forceReset && $currentPassword === '') {
+                    $errors[] = 'Current password is required (or check Force Reset if you forgot it).';
+                } elseif (!$forceReset && !password_verify($currentPassword, $admin['password_hash'])) {
+                    $errors[] = 'Current password is incorrect (or check Force Reset if you forgot it).';
                 } else {
                     // Update password
                     $newHash = password_hash($newPassword, PASSWORD_DEFAULT);
@@ -508,8 +511,9 @@ if ($pdo && $_SERVER['REQUEST_METHOD'] === 'POST') {
                         ':id'   => $adminId,
                     ]);
 
-                    $success[] = 'Your password has been updated.';
-                    log_message("Admin changed own password (id={$adminId})", 'admin:' . ($_SESSION['admin_username'] ?? 'unknown'));
+                    $resetType = $forceReset ? 'force reset' : 'changed';
+                    $success[] = "Your password has been {$resetType}.";
+                    log_message("Admin {$resetType} own password (id={$adminId})", 'admin:' . ($_SESSION['admin_username'] ?? 'unknown'));
                 }
             } catch (Exception $e) {
                 $errors[] = 'Error changing password: ' . $e->getMessage();
@@ -955,12 +959,6 @@ require_once __DIR__ . '/header.php';
         <span class="mr-4">
           <i class="fas fa-user text-primary"></i> Logged in as: <strong><?= htmlspecialchars($_SESSION['admin_full_name'] ?? $_SESSION['admin_username'] ?? 'Unknown') ?></strong>
         </span>
-        <a href="#" onclick="toggleChangePasswordPanel(); return false;" class="btn btn-sm btn-outline-dark mr-2">
-          <i class="fas fa-key"></i> Change Password
-        </a>
-        <a href="logout.php" class="btn btn-sm btn-outline-dark">
-          <i class="fas fa-sign-out-alt"></i> Logout
-        </a>
       </div>
     </div>
   </nav>
@@ -1007,6 +1005,18 @@ require_once __DIR__ . '/header.php';
               <p>Logs</p>
             </a>
           </li>
+          <li class="nav-item" style="border-top: 1px solid #495057; margin-top: 10px; padding-top: 10px;">
+            <a href="#" onclick="toggleChangePasswordPanel(); return false;" class="nav-link">
+              <i class="nav-icon fas fa-key"></i>
+              <p>Change Password</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="logout.php" class="nav-link">
+              <i class="nav-icon fas fa-sign-out-alt"></i>
+              <p>Logout</p>
+            </a>
+          </li>
         </ul>
       </nav>
     </div>
@@ -1031,7 +1041,7 @@ require_once __DIR__ . '/header.php';
                 <div class="col-md-4">
                   <div class="form-group">
                     <label>Current Password:</label>
-                    <input type="password" class="form-control" name="current_password" required>
+                    <input type="password" class="form-control" name="current_password" id="current_password">
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -1047,7 +1057,27 @@ require_once __DIR__ . '/header.php';
                   </div>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary">Update</button>
+              <div class="form-group">
+                <label class="form-check-label">
+                  <input type="checkbox" class="form-check-input" name="force_reset" value="1" id="force_reset" onchange="toggleCurrentPassword()">
+                  Force Reset (check this if you forgot your current password)
+                </label>
+              </div>
+              <script>
+                function toggleCurrentPassword() {
+                  const checkbox = document.getElementById('force_reset');
+                  const currentPwd = document.getElementById('current_password');
+                  if (checkbox.checked) {
+                    currentPwd.required = false;
+                    currentPwd.disabled = true;
+                    currentPwd.value = '';
+                  } else {
+                    currentPwd.required = true;
+                    currentPwd.disabled = false;
+                  }
+                }
+              </script>
+              <button type="submit" class="btn btn-primary">Update Password</button>
               <button type="button" class="btn btn-secondary" onclick="toggleChangePasswordPanel();">Cancel</button>
             </form>
           </div>

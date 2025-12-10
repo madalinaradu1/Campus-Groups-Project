@@ -17,7 +17,9 @@ $pageTitle   = $pageTitle   ?? 'GCU Life Admin';
   <!-- AdminLTE -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
+  <!-- Font Awesome Fallback -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.4.0/css/all.css" crossorigin="anonymous">
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/cg-guest-project/css/CT.css">
   <link rel="stylesheet" href="/cg-guest-project/css/admin.css">
